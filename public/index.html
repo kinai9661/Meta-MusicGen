@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meta MusicGen - Leapcell 免費部署</title>
+  <title>🎵 Meta MusicGen - 免費 AI 音樂生成器</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-      min-height: 100vh; 
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     .glass { 
       background: rgba(255, 255, 255, 0.15); 
@@ -27,24 +29,28 @@
       0% { transform: rotate(0deg); } 
       100% { transform: rotate(360deg); } 
     }
-    .badge {
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
+    .fade-in { animation: fadeIn 0.5s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
   </style>
 </head>
 <body class="flex items-center justify-center p-4">
-  <div class="glass rounded-3xl p-8 w-full max-w-3xl shadow-2xl">
+  <div class="glass rounded-3xl p-8 w-full max-w-3xl shadow-2xl fade-in">
     <!-- 頭部 -->
     <div class="text-center mb-8">
-      <h1 class="text-5xl font-bold text-white mb-2">🎵 Meta MusicGen</h1>
-      <p class="text-white/80 mb-4">免費部署在 Leapcell · 支持 20 個項目</p>
-      <div class="flex items-center justify-center gap-3">
-        <div class="inline-flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-full badge">
-          <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-          <span class="text-green-200 text-sm">完全免費</span>
+      <h1 class="text-5xl font-bold text-white mb-3">🎵 Meta MusicGen</h1>
+      <p class="text-white/90 text-lg mb-4">免費 AI 音樂生成器 · 無限創作</p>
+      <div class="flex items-center justify-center gap-3 flex-wrap">
+        <div class="inline-flex items-center gap-2 bg-green-500/30 px-4 py-2 rounded-full">
+          <span class="w-2 h-2 bg-green-400 rounded-full pulse"></span>
+          <span class="text-green-100 text-sm font-medium">在線運行中</span>
         </div>
-        <div class="inline-flex items-center gap-2 bg-blue-500/20 px-4 py-2 rounded-full">
-          <span class="text-blue-200 text-sm">⚡ Leapcell</span>
+        <div class="inline-flex items-center gap-2 bg-blue-500/30 px-4 py-2 rounded-full">
+          <span class="text-blue-100 text-sm">⚡ Zeabur</span>
+        </div>
+        <div class="inline-flex items-center gap-2 bg-purple-500/30 px-4 py-2 rounded-full">
+          <span class="text-purple-100 text-sm">🆓 完全免費</span>
         </div>
       </div>
     </div>
@@ -53,53 +59,54 @@
     <div class="space-y-6">
       <!-- 音樂描述 -->
       <div>
-        <label class="block text-white font-semibold mb-2">音樂描述</label>
+        <label class="block text-white font-semibold mb-2 text-lg">🎼 音樂描述</label>
         <textarea 
           id="prompt" 
           rows="4" 
-          class="w-full bg-white/10 border border-white/30 rounded-xl p-4 text-white placeholder-white/50 focus:ring-2 focus:ring-white/50 outline-none"
-          placeholder="例如：upbeat electronic dance music with synthesizers, 120 BPM, energetic"
+          class="w-full bg-white/10 border border-white/30 rounded-xl p-4 text-white placeholder-white/50 focus:ring-2 focus:ring-white/50 focus:border-white/50 outline-none transition"
+          placeholder="例如: upbeat electronic dance music with synthesizers, 120 BPM, energetic and fun"
         ></textarea>
+        <p class="text-white/60 text-sm mt-2">💡 提示: 用英文描述效果更好,可包含風格、樂器、情緒等</p>
       </div>
 
-      <!-- 風格選擇 -->
+      <!-- 風格快選 -->
       <div>
-        <label class="block text-white font-semibold mb-3">快速選擇風格</label>
+        <label class="block text-white font-semibold mb-3 text-lg">🎨 快速選擇風格</label>
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <button onclick="setPrompt('lofi hip hop beats, chill, relaxing')" 
-                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
-            🎶 Lofi Hip Hop
+          <button onclick="setPrompt('lofi hip hop beats, chill, relaxing, study music')" 
+                  class="bg-white/10 hover:bg-white/25 border border-white/30 rounded-xl p-3 text-white transition transform hover:scale-105 active:scale-95">
+            🎧 Lofi Hip Hop
           </button>
-          <button onclick="setPrompt('epic cinematic orchestral music, trailer')" 
-                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
+          <button onclick="setPrompt('epic cinematic orchestral music, dramatic, trailer music')" 
+                  class="bg-white/10 hover:bg-white/25 border border-white/30 rounded-xl p-3 text-white transition transform hover:scale-105 active:scale-95">
             🎬 史詩配樂
           </button>
-          <button onclick="setPrompt('cyberpunk synthwave, futuristic electronic')" 
-                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
+          <button onclick="setPrompt('cyberpunk synthwave, futuristic electronic, retro')" 
+                  class="bg-white/10 hover:bg-white/25 border border-white/30 rounded-xl p-3 text-white transition transform hover:scale-105 active:scale-95">
             🤖 賽博龐克
           </button>
-          <button onclick="setPrompt('japanese city pop, 80s funky bass')" 
-                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
+          <button onclick="setPrompt('japanese city pop, 80s, funky bass, upbeat')" 
+                  class="bg-white/10 hover:bg-white/25 border border-white/30 rounded-xl p-3 text-white transition transform hover:scale-105 active:scale-95">
             🌸 City Pop
           </button>
-          <button onclick="setPrompt('emotional piano solo, sad and melancholic')" 
-                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
+          <button onclick="setPrompt('emotional piano solo, sad and melancholic, slow tempo')" 
+                  class="bg-white/10 hover:bg-white/25 border border-white/30 rounded-xl p-3 text-white transition transform hover:scale-105 active:scale-95">
             🎹 感人鋼琴
           </button>
-          <button onclick="setPrompt('upbeat electronic dance music, energetic')" 
-                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
-            🕺 電子舞曲
+          <button onclick="setPrompt('upbeat electronic dance music, EDM, energetic, party')" 
+                  class="bg-white/10 hover:bg-white/25 border border-white/30 rounded-xl p-3 text-white transition transform hover:scale-105 active:scale-95">
+            💃 電子舞曲
           </button>
         </div>
       </div>
 
       <!-- 模型選擇 -->
       <div>
-        <label class="block text-white font-semibold mb-2">AI 模型</label>
+        <label class="block text-white font-semibold mb-2 text-lg">🔧 AI 模型</label>
         <select id="model" class="w-full bg-white/10 border border-white/30 rounded-xl p-3 text-white">
-          <option value="musicgen-small">MusicGen Small (快速)</option>
-          <option value="musicgen-medium" selected>MusicGen Medium (推薦)</option>
-          <option value="musicgen-large">MusicGen Large (高質量)</option>
+          <option value="musicgen-small">MusicGen Small (快速 - 約15秒)</option>
+          <option value="musicgen-medium" selected>MusicGen Medium (推薦 - 約25秒)</option>
+          <option value="musicgen-large">MusicGen Large (高質量 - 約35秒)</option>
         </select>
       </div>
 
@@ -107,104 +114,204 @@
       <button 
         id="generateBtn" 
         onclick="generate()" 
-        class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-4 rounded-xl transition transform hover:scale-[1.02] active:scale-95 shadow-lg"
+        class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-5 rounded-xl transition transform hover:scale-[1.02] active:scale-95 shadow-lg text-lg"
       >
         ✨ 開始生成音樂
       </button>
 
       <!-- 狀態提示 -->
-      <div id="status" class="hidden p-4 rounded-xl text-center"></div>
+      <div id="status" class="hidden"></div>
 
       <!-- 結果區域 -->
-      <div id="result" class="hidden">
+      <div id="result" class="hidden fade-in">
         <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/30">
-          <h3 class="text-xl font-bold text-white mb-4 text-center">🎉 生成成功!</h3>
-          <audio id="audioPlayer" controls class="w-full mb-4"></audio>
-          <a id="downloadLink" class="block text-center bg-white/20 hover:bg-white/30 py-3 rounded-lg text-white transition">
-            ⬇️ 下載音頻文件
-          </a>
+          <h3 class="text-2xl font-bold text-white mb-4 text-center">🎉 生成成功!</h3>
+          <audio id="audioPlayer" controls class="w-full mb-4" controlsList="nodownload"></audio>
+          <div class="flex gap-3">
+            <a id="downloadLink" class="flex-1 text-center bg-white/20 hover:bg-white/30 py-3 rounded-lg text-white transition font-semibold">
+              ⬇️ 下載音頻
+            </a>
+            <button onclick="generate()" class="flex-1 bg-purple-500/50 hover:bg-purple-500/70 py-3 rounded-lg text-white transition font-semibold">
+              🔄 再生成一首
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- 使用說明 -->
+    <div class="mt-8 p-4 bg-white/10 rounded-xl border border-white/20">
+      <h4 class="text-white font-bold mb-2">📌 使用說明</h4>
+      <ul class="text-white/80 text-sm space-y-1">
+        <li>• 首次生成可能需要 20-30 秒喚醒 AI 模型</li>
+        <li>• 建議使用英文描述,效果更精確</li>
+        <li>• 可以指定風格、樂器、節奏、情緒等要素</li>
+        <li>• 生成的音樂可免費下載和商用</li>
+      </ul>
+    </div>
+
     <!-- 底部信息 -->
-    <div class="mt-8 text-center text-white/60 text-sm">
-      <p>Powered by Meta MusicGen · Deployed on Leapcell</p>
-      <p class="mt-1">
+    <div class="mt-8 text-center text-white/60 text-sm space-y-2">
+      <p>Powered by Meta MusicGen · Deployed on Zeabur</p>
+      <p>
         GitHub: 
         <a href="https://github.com/kinai9661/Meta-MusicGen" 
            class="text-white/80 hover:text-white underline" 
            target="_blank">kinai9661/Meta-MusicGen</a>
       </p>
-      <p class="mt-2 text-xs text-white/40">
-        🚀 15分鐘超時 · 💾 內建數據庫 · 🆓 完全免費
+      <p class="text-xs text-white/40 mt-4">
+        🚀 自動重試機制 · ⚡ 智能模型喚醒 · 🆓 完全免費開源
       </p>
     </div>
   </div>
 
   <script>
+    // 設置 prompt
     function setPrompt(text) {
       document.getElementById('prompt').value = text
+      document.getElementById('prompt').focus()
     }
 
+    // 更新狀態顯示
+    function updateStatus(message, type = 'info') {
+      const status = document.getElementById('status')
+      status.classList.remove('hidden')
+      
+      const colors = {
+        info: 'bg-blue-500/20 text-blue-100',
+        success: 'bg-green-500/20 text-green-100',
+        error: 'bg-red-500/20 text-red-100',
+        warning: 'bg-yellow-500/20 text-yellow-100'
+      }
+      
+      status.className = `block p-4 rounded-xl text-center ${colors[type] || colors.info}`
+      status.innerHTML = message
+    }
+
+    // 生成音樂
     async function generate() {
-      const prompt = document.getElementById('prompt').value
+      const prompt = document.getElementById('prompt').value.trim()
       const model = document.getElementById('model').value
       const btn = document.getElementById('generateBtn')
-      const status = document.getElementById('status')
       const result = document.getElementById('result')
 
       if (!prompt) {
         alert('請輸入音樂描述!')
+        document.getElementById('prompt').focus()
         return
       }
 
-      // 更新 UI
+      // UI 更新
       btn.disabled = true
       btn.innerHTML = '<div class="loader mx-auto"></div>'
-      status.className = 'block p-4 rounded-xl text-center bg-blue-500/20 text-blue-100'
-      status.innerText = '🎵 正在生成音樂,請稍候... (約30秒)'
       result.classList.add('hidden')
+      
+      // 顯示進度
+      updateStatus(`
+        <div class="space-y-3">
+          <p class="font-bold">🎵 正在創作音樂...</p>
+          <p class="text-sm">AI 模型正在運算中,預計需要 20-40 秒</p>
+          <p class="text-xs opacity-75">如果是首次使用,可能需要喚醒模型,請耐心等待</p>
+          <div class="mt-3">
+            <div class="w-full bg-white/20 rounded-full h-2">
+              <div id="progress" class="bg-white h-2 rounded-full transition-all duration-1000" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      `, 'info')
+
+      // 模擬進度條
+      let progress = 0
+      const progressInterval = setInterval(() => {
+        progress = Math.min(progress + 2, 90)
+        const progressBar = document.getElementById('progress')
+        if (progressBar) progressBar.style.width = progress + '%'
+      }, 1000)
 
       try {
+        const startTime = Date.now()
+        
         const res = await fetch('/api/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt, model })
         })
 
+        clearInterval(progressInterval)
+        const progressBar = document.getElementById('progress')
+        if (progressBar) progressBar.style.width = '100%'
+
         if (!res.ok) {
           const data = await res.json()
-          throw new Error(data.error || '生成失敗')
+          throw new Error(data.message || data.error || '生成失敗')
         }
 
         const blob = await res.blob()
         const url = URL.createObjectURL(blob)
+        const duration = ((Date.now() - startTime) / 1000).toFixed(1)
         
         document.getElementById('audioPlayer').src = url
         document.getElementById('downloadLink').href = url
         document.getElementById('downloadLink').download = `musicgen_${Date.now()}.flac`
         
         result.classList.remove('hidden')
-        status.classList.add('hidden')
+        updateStatus(`✅ 生成成功! 耗時 ${duration} 秒`, 'success')
+        
+        // 3秒後隱藏成功提示
+        setTimeout(() => {
+          document.getElementById('status').classList.add('hidden')
+        }, 3000)
 
       } catch (err) {
-        status.className = 'block p-4 rounded-xl text-center bg-red-500/20 text-red-100'
-        status.innerText = '❌ 錯誤: ' + err.message
+        clearInterval(progressInterval)
+        
+        console.error('生成錯誤:', err)
+        
+        let errorMessage = err.message
+        let hint = ''
+        
+        if (err.message.includes('loading')) {
+          hint = '請等待 30 秒後重試,模型正在喚醒中...'
+        } else if (err.message.includes('Key')) {
+          hint = '服務器配置問題,請聯繫管理員'
+        } else {
+          hint = '請檢查網絡連接或稍後再試'
+        }
+        
+        updateStatus(`
+          <div class="space-y-2">
+            <p class="font-bold">❌ ${errorMessage}</p>
+            <p class="text-sm">${hint}</p>
+            <button onclick="generate()" class="mt-3 px-6 py-2 bg-red-500/50 hover:bg-red-500/70 rounded-lg transition">
+              🔄 重試
+            </button>
+          </div>
+        `, 'error')
       } finally {
         btn.disabled = false
-        btn.innerHTML = '✨ 再生成一首'
+        btn.innerHTML = '✨ 開始生成音樂'
       }
     }
 
-    // 頁面加載完成後檢查狀態
+    // 頁面加載時檢查服務器狀態
     window.addEventListener('load', async () => {
       try {
         const res = await fetch('/health')
         const data = await res.json()
-        console.log('🚀 Server Status:', data)
+        console.log('🚀 服務器狀態:', data)
+        
+        if (!data.apiKeyConfigured) {
+          updateStatus('⚠️ 服務器未配置 API Key,功能可能受限', 'warning')
+        }
       } catch (err) {
-        console.error('⚠️ Health check failed:', err)
+        console.error('健康檢查失敗:', err)
+      }
+    })
+
+    // 鍵盤快捷鍵: Ctrl/Cmd + Enter 生成
+    document.getElementById('prompt').addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        generate()
       }
     })
   </script>

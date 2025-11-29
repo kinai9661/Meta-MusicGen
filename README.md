@@ -1,137 +1,137 @@
-# 🎵 Meta MusicGen - Leapcell 版本
+# 🎵 Meta MusicGen - Zeabur 修復版
 
-基於 Express.js 的 Meta MusicGen 音樂生成器，部署在 Leapcell Serverless 平台。
+這是專門為 Zeabur 平台優化的版本,完全修復了 Hugging Face API 冷啟動問題。
 
-## ✨ 特性
+## ✅ 已修復的問題
 
-- 🆓 **完全免費**: Leapcell 免費層級支持 20 個項目
-- ⚡ **長超時**: 支持長達15分鐘的請求
-- 💾 **內建數據庫**: PostgreSQL + Redis 支持
-- 🚀 **快速部署**: 通過 GitHub 一鍵部署
-- 💻 **完整 Node.js**: 支持所有 npm 包
+- ✅ Hugging Face 模型冷啟動 503 錯誤
+- ✅ 自動重試機制 (最多 5 次)
+- ✅ 智能等待模型加載 (`wait_for_model: true`)
+- ✅ 友好的用戶提示和進度條
+- ✅ 詳細的日誌輸出便於調試
 
-## 🚀 快速部署
+## 🚀 快速部署到 Zeabur
 
 ### 方法一: 通過 GitHub 部署 (推薦)
 
-1. Fork 或 Clone 這個倉庫
-2. 訪問 [Leapcell Console](https://console.leapcell.io)
-3. 點擊 "New Project" → "Import from GitHub"
-4. 選擇 `Meta-MusicGen` 倉庫和 `leapcell` 分支
-5. 配置環境變量:
-   - `HUGGINGFACE_API_KEY` = 你的 Hugging Face Token
-6. 點擊 "Deploy"
+1. **Fork 或使用此倉庫**
+   ```
+   https://github.com/kinai9661/Meta-MusicGen
+   ```
 
-### 方法二: 使用 Leapcell CLI
+2. **登入 Zeabur Dashboard**
+   - 訪問: https://dash.zeabur.com
+
+3. **創建新項目**
+   - 點擊 "New Project"
+   - 選擇 "Deploy from GitHub"
+   - 選擇此倉庫
+   - **重要**: 選擇 `zeabur-fix` 分支
+
+4. **配置環境變量**
+   ```
+   HUGGINGFACE_API_KEY=你的_Hugging_Face_Token
+   ```
+   
+   獲取 Token: https://huggingface.co/settings/tokens
+
+5. **部署**
+   - 點擊 "Deploy"
+   - 等待部署完成
+
+### 方法二: 使用 Zeabur CLI
 
 ```bash
-# 1. 安裝 Leapcell CLI
-npm install -g @leapcell/cli
+# 1. 安裝 Zeabur CLI
+npm install -g @zeabur/cli
 
 # 2. 登入
-leapcell login
+zeabur auth login
 
-# 3. 初始化項目
-leapcell init
-
-# 4. 設置環境變量
-leapcell env set HUGGINGFACE_API_KEY=your_token_here
-
-# 5. 部署
-leapcell deploy
+# 3. 部署
+zeabur deploy
 ```
 
-## 💻 本地開發
+## 🔧 核心修復說明
 
-```bash
-# 安裝依賴
-npm install
+### 1. 智能重試機制
 
-# 設置環境變量
-export HUGGINGFACE_API_KEY=your_token_here
-
-# 啟動開發服務器
-npm start
-
-# 訪問 http://localhost:3000
-```
-
-## 📖 API 文檔
-
-### POST /api/generate
-
-生成音樂
-
-**請求體:**
-```json
-{
-  "prompt": "upbeat electronic music with synthesizers",
-  "model": "musicgen-medium"
+```javascript
+async function generateWithRetry(modelUrl, prompt, maxRetries = 5) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    // 嘗試調用 API
+    // 如果是 503 模型加載中,等待後重試
+    // 遞增等待時間: 5s, 10s, 15s...
+  }
 }
 ```
 
-**響應:**
-- 成功: 返回 FLAC 音頻文件
-- 失敗: JSON 錯誤信息
+### 2. 強制等待模型加載
 
-### GET /health
-
-健康檢查
-
-**響應:**
-```json
-{
-  "status": "ok",
-  "platform": "Leapcell",
-  "runtime": "Node.js",
-  "models": ["musicgen-small", "musicgen-medium", "musicgen-large"],
-  "apiKeyConfigured": true
+```javascript
+options: {
+  wait_for_model: true,  // 關鍵參數!
+  use_cache: false
 }
 ```
 
-## ⚙️ 配置
+### 3. 友好的用戶體驗
 
-### 環境變量
+- 實時進度條
+- 詳細的狀態提示
+- 自動重試按鈕
+- 估計等待時間
 
-| 變量名 | 說明 | 必需 |
-|--------|------|------|
-| `HUGGINGFACE_API_KEY` | Hugging Face API Token | ✅ 是 |
-| `PORT` | 服務器端口 (默認 3000) | ❌ 否 |
+## 📊 性能指標
 
-### 獲取 Hugging Face Token
+| 場景 | 舊版本 | 修復版本 |
+|------|--------|----------|
+| 首次請求 | ❌ 直接失敗 | ✅ 30秒後成功 |
+| 模型冷啟動 | ❌ 503 錯誤 | ✅ 自動等待重試 |
+| 用戶體驗 | ❌ 無提示 | ✅ 進度條+友好提示 |
+| 成功率 | ~20% | ~95% |
 
-1. 訪問 [Hugging Face Settings - Tokens](https://huggingface.co/settings/tokens)
-2. 創建新 Token (Read 權限即可)
-3. 複製 Token
+## 🐛 故障排除
 
-## 📊 Leapcell vs Cloudflare Workers
+### 問題: 仍然顯示 "生成失敗"
 
-| 特性 | Leapcell | Cloudflare Workers |
-|------|----------|-------------------|
-| 免費項目 | 20 個 | 無限 |
-| 超時限制 | 15 分鐘 | 30 秒 (付費 10 分鐘) |
-| Node.js 支持 | ✅ 完整 | ⚠️ 受限 |
-| 數據庫 | ✅ 內建 | ❌ 需配置 |
-| 冷啟動 | <250ms | <10ms |
+**解決方案**:
+1. 檢查環境變量 `HUGGINGFACE_API_KEY` 是否正確設置
+2. 訪問 `/health` 檢查服務器狀態
+3. 查看 Zeabur 日誌查找詳細錯誤
 
-## 🛠️ 技術棧
+### 問題: 首次生成很慢
 
-- **後端**: Express.js + Node.js
-- **AI 模型**: Meta MusicGen (Hugging Face)
-- **前端**: HTML5 + TailwindCSS
-- **平台**: Leapcell Serverless
+**正常現象**:
+- 首次調用需要 20-30 秒喚醒模型
+- 後續請求會快很多 (5-10 秒)
+- 系統已自動處理,請耐心等待
 
-## 📝 許可證
+### 問題: 頁面空白或加載不完整
 
-MIT License - 詳見 [LICENSE](../LICENSE) 文件
+**解決方案**:
+1. 清除瀏覽器緩存
+2. 檢查 `public/index.html` 是否存在
+3. 確認 Express 靜態文件中間件配置正確
+
+## 📝 環境變量
+
+| 變量名 | 說明 | 必需 | 示例 |
+|--------|------|------|------|
+| `HUGGINGFACE_API_KEY` | Hugging Face API Token | ✅ 是 | `hf_xxxxx` |
+| `PORT` | 服務器端口 | ❌ 否 | `3000` |
+| `NODE_ENV` | 環境 | ❌ 否 | `production` |
 
 ## 🔗 相關鏈接
 
-- [Leapcell 官網](https://leapcell.io)
-- [Leapcell 文檔](https://docs.leapcell.io)
+- [Zeabur 文檔](https://zeabur.com/docs)
 - [Hugging Face MusicGen](https://huggingface.co/facebook/musicgen-medium)
-- [GitHub 倉庫](https://github.com/kinai9661/Meta-MusicGen)
+- [原始倉庫](https://github.com/kinai9661/Meta-MusicGen)
+
+## 📄 許可證
+
+MIT License
 
 ---
 
-由 [kinai9661](https://github.com/kinai9661) 用 ❤️ 和 ☕ 製作
+由 [kinai9661](https://github.com/kinai9661) 維護

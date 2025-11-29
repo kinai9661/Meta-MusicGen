@@ -1,7 +1,7 @@
 {
-  "name": "meta-musicgen-leapcell",
-  "version": "1.0.0",
-  "description": "Free AI Music Generator on Leapcell - Express.js Version",
+  "name": "meta-musicgen-zeabur",
+  "version": "1.0.1",
+  "description": "Meta MusicGen on Zeabur - Fixed Version",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "keywords": [
     "musicgen",
-    "leapcell",
+    "zeabur",
     "ai-music",
     "express",
     "huggingface"
@@ -19,15 +19,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kinai9661/Meta-MusicGen.git"
+    "url": "https://github.com/kinai9661/Meta-MusicGen.git",
+    "branch": "zeabur-fix"
   },
   "dependencies": {
     "express": "^4.18.2",
     "node-fetch": "^3.3.2",
     "cors": "^2.8.5"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
   },
   "engines": {
     "node": ">=18.0.0"
