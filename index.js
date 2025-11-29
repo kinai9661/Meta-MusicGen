@@ -1,6 +1,6 @@
 /**
  * Meta MusicGen - Zeabur 優化版本
- * 修復 Hugging Face API 冷啟動問題
+ * 修復 Hugging Face API 端點遷移問題 (410 錯誤)
  * GitHub: https://github.com/kinai9661/Meta-MusicGen
  */
 
@@ -22,7 +22,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static('public'))
 
-// 配置
+// 配置 - 使用新的 Hugging Face Router API
 const HUGGINGFACE_API_KEY = process.env.HUGGINGFACE_API_KEY
 const MODELS = {
   'musicgen-small': 'https://api-inference.huggingface.co/models/facebook/musicgen-small',
@@ -35,7 +35,8 @@ console.log(`
 ║  🎵 Meta MusicGen - Zeabur Edition          ║
 ║  🚀 Platform: Zeabur Serverless               ║
 ║  ⚙️  Runtime: Node.js ${process.version}                 ║
-║  📡 API Key: ${HUGGINGFACE_API_KEY ? '✓ Configured' : '✗ Missing'}                    ║
+║  📡 API: router.huggingface.co (NEW)          ║
+║  🔑 API Key: ${HUGGINGFACE_API_KEY ? '✓ Configured' : '✗ Missing'}                    ║
 ╚════════════════════════════════════════════════╝
 `)
 
@@ -46,6 +47,7 @@ app.get('/health', (req, res) => {
     platform: 'Zeabur',
     runtime: 'Node.js',
     version: process.version,
+    apiEndpoint: 'router.huggingface.co',
     models: Object.keys(MODELS),
     apiKeyConfigured: !!HUGGINGFACE_API_KEY,
     timestamp: new Date().toISOString()
@@ -184,8 +186,9 @@ app.post('/api/generate', async (req, res) => {
 app.get('/api', (req, res) => {
   res.json({
     name: 'Meta MusicGen API',
-    version: '1.0.0',
+    version: '1.0.1',
     platform: 'Zeabur',
+    apiEndpoint: 'router.huggingface.co',
     endpoints: {
       generate: {
         path: '/api/generate',
@@ -207,6 +210,7 @@ app.get('/api', (req, res) => {
       }
     },
     notes: [
+      '已更新到新的 Hugging Face Router API',
       '首次調用模型可能需要 20-30 秒冷啟動時間',
       '系統會自動重試最多 5 次',
       '建議使用 musicgen-medium 模型以平衡質量和速度'
