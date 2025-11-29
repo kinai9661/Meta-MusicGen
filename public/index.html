@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meta MusicGen - Leapcell 免費部署</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+      min-height: 100vh; 
+    }
+    .glass { 
+      background: rgba(255, 255, 255, 0.15); 
+      backdrop-filter: blur(10px); 
+      border: 1px solid rgba(255,255,255,0.25); 
+    }
+    .loader { 
+      border: 3px solid #f3f3f3; 
+      border-top: 3px solid #667eea; 
+      border-radius: 50%; 
+      width: 24px; 
+      height: 24px; 
+      animation: spin 1s linear infinite; 
+    }
+    @keyframes spin { 
+      0% { transform: rotate(0deg); } 
+      100% { transform: rotate(360deg); } 
+    }
+    .badge {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center p-4">
+  <div class="glass rounded-3xl p-8 w-full max-w-3xl shadow-2xl">
+    <!-- 頭部 -->
+    <div class="text-center mb-8">
+      <h1 class="text-5xl font-bold text-white mb-2">🎵 Meta MusicGen</h1>
+      <p class="text-white/80 mb-4">免費部署在 Leapcell · 支持 20 個項目</p>
+      <div class="flex items-center justify-center gap-3">
+        <div class="inline-flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-full badge">
+          <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+          <span class="text-green-200 text-sm">完全免費</span>
+        </div>
+        <div class="inline-flex items-center gap-2 bg-blue-500/20 px-4 py-2 rounded-full">
+          <span class="text-blue-200 text-sm">⚡ Leapcell</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 表單 -->
+    <div class="space-y-6">
+      <!-- 音樂描述 -->
+      <div>
+        <label class="block text-white font-semibold mb-2">音樂描述</label>
+        <textarea 
+          id="prompt" 
+          rows="4" 
+          class="w-full bg-white/10 border border-white/30 rounded-xl p-4 text-white placeholder-white/50 focus:ring-2 focus:ring-white/50 outline-none"
+          placeholder="例如：upbeat electronic dance music with synthesizers, 120 BPM, energetic"
+        ></textarea>
+      </div>
+
+      <!-- 風格選擇 -->
+      <div>
+        <label class="block text-white font-semibold mb-3">快速選擇風格</label>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <button onclick="setPrompt('lofi hip hop beats, chill, relaxing')" 
+                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
+            🎶 Lofi Hip Hop
+          </button>
+          <button onclick="setPrompt('epic cinematic orchestral music, trailer')" 
+                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
+            🎬 史詩配樂
+          </button>
+          <button onclick="setPrompt('cyberpunk synthwave, futuristic electronic')" 
+                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
+            🤖 賽博龐克
+          </button>
+          <button onclick="setPrompt('japanese city pop, 80s funky bass')" 
+                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
+            🌸 City Pop
+          </button>
+          <button onclick="setPrompt('emotional piano solo, sad and melancholic')" 
+                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
+            🎹 感人鋼琴
+          </button>
+          <button onclick="setPrompt('upbeat electronic dance music, energetic')" 
+                  class="bg-white/10 hover:bg-white/20 border border-white/30 rounded-lg p-3 text-white transition transform hover:scale-105">
+            🕺 電子舞曲
+          </button>
+        </div>
+      </div>
+
+      <!-- 模型選擇 -->
+      <div>
+        <label class="block text-white font-semibold mb-2">AI 模型</label>
+        <select id="model" class="w-full bg-white/10 border border-white/30 rounded-xl p-3 text-white">
+          <option value="musicgen-small">MusicGen Small (快速)</option>
+          <option value="musicgen-medium" selected>MusicGen Medium (推薦)</option>
+          <option value="musicgen-large">MusicGen Large (高質量)</option>
+        </select>
+      </div>
+
+      <!-- 生成按鈕 -->
+      <button 
+        id="generateBtn" 
+        onclick="generate()" 
+        class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-4 rounded-xl transition transform hover:scale-[1.02] active:scale-95 shadow-lg"
+      >
+        ✨ 開始生成音樂
+      </button>
+
+      <!-- 狀態提示 -->
+      <div id="status" class="hidden p-4 rounded-xl text-center"></div>
+
+      <!-- 結果區域 -->
+      <div id="result" class="hidden">
+        <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/30">
+          <h3 class="text-xl font-bold text-white mb-4 text-center">🎉 生成成功!</h3>
+          <audio id="audioPlayer" controls class="w-full mb-4"></audio>
+          <a id="downloadLink" class="block text-center bg-white/20 hover:bg-white/30 py-3 rounded-lg text-white transition">
+            ⬇️ 下載音頻文件
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部信息 -->
+    <div class="mt-8 text-center text-white/60 text-sm">
+      <p>Powered by Meta MusicGen · Deployed on Leapcell</p>
+      <p class="mt-1">
+        GitHub: 
+        <a href="https://github.com/kinai9661/Meta-MusicGen" 
+           class="text-white/80 hover:text-white underline" 
+           target="_blank">kinai9661/Meta-MusicGen</a>
+      </p>
+      <p class="mt-2 text-xs text-white/40">
+        🚀 15分鐘超時 · 💾 內建數據庫 · 🆓 完全免費
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function setPrompt(text) {
+      document.getElementById('prompt').value = text
+    }
+
+    async function generate() {
+      const prompt = document.getElementById('prompt').value
+      const model = document.getElementById('model').value
+      const btn = document.getElementById('generateBtn')
+      const status = document.getElementById('status')
+      const result = document.getElementById('result')
+
+      if (!prompt) {
+        alert('請輸入音樂描述!')
+        return
+      }
+
+      // 更新 UI
+      btn.disabled = true
+      btn.innerHTML = '<div class="loader mx-auto"></div>'
+      status.className = 'block p-4 rounded-xl text-center bg-blue-500/20 text-blue-100'
+      status.innerText = '🎵 正在生成音樂,請稍候... (約30秒)'
+      result.classList.add('hidden')
+
+      try {
+        const res = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, model })
+        })
+
+        if (!res.ok) {
+          const data = await res.json()
+          throw new Error(data.error || '生成失敗')
+        }
+
+        const blob = await res.blob()
+        const url = URL.createObjectURL(blob)
+        
+        document.getElementById('audioPlayer').src = url
+        document.getElementById('downloadLink').href = url
+        document.getElementById('downloadLink').download = `musicgen_${Date.now()}.flac`
+        
+        result.classList.remove('hidden')
+        status.classList.add('hidden')
+
+      } catch (err) {
+        status.className = 'block p-4 rounded-xl text-center bg-red-500/20 text-red-100'
+        status.innerText = '❌ 錯誤: ' + err.message
+      } finally {
+        btn.disabled = false
+        btn.innerHTML = '✨ 再生成一首'
+      }
+    }
+
+    // 頁面加載完成後檢查狀態
+    window.addEventListener('load', async () => {
+      try {
+        const res = await fetch('/health')
+        const data = await res.json()
+        console.log('🚀 Server Status:', data)
+      } catch (err) {
+        console.error('⚠️ Health check failed:', err)
+      }
+    })
+  </script>
+</body>
+</html>
