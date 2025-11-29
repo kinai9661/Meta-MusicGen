@@ -1,0 +1,29 @@
+{
+  "name": "meta-musicgen-worker",
+  "version": "1.0.0",
+  "description": "Free AI Music Generator using Meta MusicGen on Cloudflare Workers",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:production": "wrangler deploy --env production"
+  },
+  "keywords": [
+    "musicgen",
+    "cloudflare-workers",
+    "ai-music",
+    "music-generation",
+    "huggingface",
+    "free",
+    "serverless"
+  ],
+  "author": "kinai9661",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kinai9661/Meta-MusicGen.git"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

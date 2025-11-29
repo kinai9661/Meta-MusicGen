@@ -1,0 +1,23 @@
+name = "meta-musicgen-free"
+main = "src/index.js"
+compatibility_date = "2025-11-29"
+
+# 環境配置
+[vars]
+ENVIRONMENT = "production"
+
+# API Key 請使用 wrangler secret put 設置
+# wrangler secret put HUGGINGFACE_API_KEY
+
+# 開發環境
+[env.development]
+vars = { ENVIRONMENT = "development" }
+
+# 生產環境
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+# 可選: 綁定自定義域名
+# [[routes]]
+# pattern = "music.yourdomain.com/*"
+# zone_name = "yourdomain.com"
